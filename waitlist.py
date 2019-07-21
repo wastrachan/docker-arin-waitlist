@@ -2,6 +2,7 @@ import os
 import time
 import click
 import requests
+import datetime
 from requests.exceptions import HTTPError
 from dotenv import load_dotenv
 
@@ -22,7 +23,7 @@ def command(notify, schedule):
     if schedule:
         while True:
             waitlist(notify)
-            print("Next check in {} minutes\n".format(schedule))
+            print("    Next check in {} minutes\n".format(schedule))
             time.sleep(schedule * 60)
     else:
         waitlist(notify)
@@ -34,12 +35,12 @@ def waitlist(notify):
     Args:
         notify (bool) - Post notification to Slack on waitlist change, if true
     """
-    print("Loading waitlist...")
+    print("{}".format(datetime.datetime.now()))
     try:
         response = requests.get(WAITLIST_URL, headers={'accept': 'Application/JSON'})
         response.raise_for_status()
     except HTTPError as e:
-        print("Unable to load waitlist: HTTP {} for URL {}".format(e, WAITLIST_URL))
+        print("    Unable to load waitlist: HTTP {} for URL {}".format(e, WAITLIST_URL))
         quit(1)
 
     data = response.json()
@@ -52,18 +53,18 @@ def waitlist(notify):
             current_position = entry_position
 
     if not current_position:
-        print("\nWaiting list entry not found! :champagne::champagne::champagne:")
+        print("    Waiting list entry not found! :champagne::champagne::champagne:")
         if notify:
-            success("We weren't found on the waiting list! :champagne::champagne::champagne:")
+            success("    We weren't found on the waiting list! :champagne::champagne::champagne:")
         quit(0)
-    print("\nCurrent waiting list position: {}".format(current_position))
+    print("    Current waiting list position: {}".format(current_position))
     if last_position:
         if current_position != last_position:
-            print("Last position was {}".format(last_position))
+            print("    Last position was {}".format(last_position))
             if notify:
-                info('Current waitlist position: {}\nPrevious Waitlist Position: {}'.format(current_position, last_position))
+                info('    Current waitlist position: {}\nPrevious Waitlist Position: {}'.format(current_position, last_position))
         else:
-            print("No change from last postion.")
+            print("    No change from last postion.")
 
     set_last_position(current_position)
 
