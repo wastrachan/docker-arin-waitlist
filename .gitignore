@@ -1,2 +1,3 @@
-.last_position
+config/
+*.img
 .env

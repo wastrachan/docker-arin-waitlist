@@ -1,5 +1,9 @@
-FROM kennethreitz/pipenv
+FROM python:3.8.1-alpine
+LABEL maintainer="Winston Astrachan"
+LABEL description="ARIN Waitlist Monitor"
 
-COPY . /app
+COPY app/ /
+RUN pip install -r /requirements.txt
 
-CMD ["python3", "-u", "waitlist.py", "--notify", "--schedule", "10"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["crond", "-f", "-c", "/etc/crontabs/"]

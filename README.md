@@ -1,53 +1,60 @@
-ARIN Waitlist Alert Tool
-========================
-This tool reads [ARIN's IPV4 Waitlist](https://www.arin.net/resources/guide/ipv4/waiting_list/) and reports the current status of _your_ waitlist entry in Slack.
+ARIN Waitlist Monitor
+=====================
+Monitor ARIN's IPV4 Waitlist for changes and reports the current status of your waitlist entry in Slack.
 
 
-## Disclaimer
-This is one of those "I spent an hour after work" projects. I cobbled it together in an afternoon, and got it just to where it suited my needs. Feel free to use it as inspiration, fork it, hack it, whatever you need. It's by no means perfect.
+[![](https://circleci.com/gh/wastrachan/docker-arin-waitlist.svg?style=svg)](https://circleci.com/gh/wastrachan/docker-arin-waitlist)
+[![](https://img.shields.io/docker/pulls/wastrachan/arin-waitlist.svg)](https://hub.docker.com/r/wastrachan/arin-waitlist)
+
+## Install
+
+#### Docker Hub
+Pull the latest image from Docker Hub:
+
+```shell
+docker pull wastrachan/arin-waitlist
+```
+
+#### Manually
+Clone this repository, and run `make build` to build an image:
+
+```shell
+git clone https://github.com/wastrachan/docker-arin-waitlist.git
+cd docker-arin-waitlist
+make build
+```
+
+If you need to rebuild the image, run `make clean build`.
+
+
+## Run
+
+#### Docker
+Run this image manually with `docker run`. You'll need to define several environment variables for this container, and they are detailed below.
+
+
+```shell
+docker run --name arin-waitlist \
+           -e ARIN_WAITLIST_TIME="Tue, 25 Feb 2020 13:07:29" \
+           -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/TTtttttTT" \
+           --restart unless-stopped \
+           wastrachan/arin-waitlist:latest
+```
+
 
 ## Configuration
-This tool depends on a few environment variables. They can be provided in a `.env` file as follows:
+Configuration is accomplished through the use of environment variables. The inclusive list is below.
 
-| Variable | Description
-|----------|------------
-| WAITLIST_TIME | Required. Timestamp from your entry in ARIN's waitlist
-| SLACK_WEBHOOK_URL | Required. Slack webhook URL
-| SLACK_EMOJI | Optional. Specify an emoji to use for your webhook user
-| SLACK_TITLE | Optional. Title for all Slack alerts
 
-```
-SLACK_EMOJI=":timhortons:"
-SLACK_WEBHOOK_URL="https://hooks.slack.com/services/YOUR_WEBHOOk"
-SLACK_TITLE="ARIN Waitlist"
-WAITLIST_TIME="00:00:00 -0400"
-```
-
-## Running
-This package includes a `Pipenv` file. Run `pipenv install` after cloning the project to set up dependencies.
-
-`waitlist.py` supports several arguments:
-```
-Usage: waitlist.py [OPTIONS]
-
-  Entrypoint for click command
-
-Options:
-  --notify            Send notification to Slack on any waitlist movement
-  --schedule INTEGER  Schedule (in minutes) at which to re-run check
-  --help              Show this message and exit.
-```
-
-## Docker
-Examine the Dockerfile for configuration options when building the image. A Dockerfile was included that builds this project against pipenv docker images.
-
-To build:
-
-`docker build -t waitlist`
-
-To run:
-
-`docker run waitlist`
+#### Environment Variables
+Variable            | Required | Default | Description
+--------------------|----------|---------|------------
+`UPDATE_SCHEDULE`   | No       | `*/5 * * * *` | Cron-style schedule for waitlist updates.
+`ARIN_WAITLIST_TIME`| Yes      | - | The timestamp for your waitlist entry. You can locate this timestamp on the [IPV4 Waiting List](https://www.arin.net/resources/guide/ipv4/waiting_list/). The timestamp can be copied right off of this page-- but leave off the timezone. A valid entry may read `Tue, 25 Feb 2020 13:07:29`
+`ARIN_WAITLIST_URL` | No       | `https://www.arin.net/rest/waitinglist` | URL of the ARIN API.
+`SLACK_WEBHOOK_URL` | Yes      | - | [Webhook](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks) URL created for your Slack workspace.
+`SLACK_EMOJI`       | No       | `:hourglass:` | Customize the emoji displayed in your Slack alert.
+`SLACK_TITLE`       | No       | `ARIN Waitlist Monitor` | Customize the name of your Slack alert.
 
 
 ## License
