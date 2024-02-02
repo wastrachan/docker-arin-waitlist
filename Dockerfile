@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED=1 \
     LC_CTYPE="C.UTF-8"
 
 COPY arin-waitlist.py /
-COPY docker-entrypoint.py /
+COPY docker-entrypoint.sh /
 COPY requirements.txt /
 RUN set -eux; \
     pip install -r /requirements.txt
