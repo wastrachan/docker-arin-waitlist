@@ -1,7 +1,3 @@
-# ARIN Waitlist Monitor Makefile
-#
-# Copyright (c) Winston Astrachan 2020
-#
 help:
 	@echo ""
 	@echo "Usage: make COMMAND"
