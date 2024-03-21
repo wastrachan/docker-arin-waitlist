@@ -29,12 +29,12 @@ push:
 
 .PHONY: run
 run: build
-docker run --name arin-waitlist \
-           --rm \
-           -e ARIN_WAITLIST_TIME="Tue, 25 Feb 2020 13:07:29" \
-           -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/TTtttttTT" \
-           -d \
-           ${REGISTRY}/${IMAGE}:${TAG}
+	@docker run --name arin-waitlist \
+               --rm \
+               -e ARIN_WAITLIST_TIME="Tue, 25 Feb 2020 13:07:29" \
+               -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/TTtttttTT" \
+               -d \
+               ${REGISTRY}/${IMAGE}:${TAG}
 
 .PHONY: stop
 stop:
