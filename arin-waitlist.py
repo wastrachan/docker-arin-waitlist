@@ -11,8 +11,9 @@ Released under the terms of the MIT license
 import datetime
 import json
 import os
-import requests
 import time
+
+import requests
 
 
 def _get_env_var(name, default=None):

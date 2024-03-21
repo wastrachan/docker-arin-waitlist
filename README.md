@@ -15,7 +15,15 @@ Pull the latest image from Docker Hub:
 docker pull wastrachan/arin-waitlist
 ```
 
-#### Manually
+#### Github Container Registry
+
+Or, pull from the GitHub Container Registry:
+
+```shell
+docker pull ghcr.io/wastrachan/arin-waitlist
+```
+
+#### Build From Source
 
 Clone this repository, and run `make build` to build an image:
 
@@ -25,19 +33,18 @@ cd docker-arin-waitlist
 make build
 ```
 
-If you need to rebuild the image, run `make clean build`.
-
 ## Run
 
 #### Docker
 
-Run this image manually with `docker run`. You'll need to define several environment variables for this container, and they are detailed below.
+Run this image with the `make run` shortcut, or manually with `docker run`.
 
 ```shell
 docker run --name arin-waitlist \
+           --rm \
            -e ARIN_WAITLIST_TIME="Tue, 25 Feb 2020 13:07:29" \
            -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/TTtttttTT" \
-           --restart unless-stopped \
+           -d \
            wastrachan/arin-waitlist:latest
 ```
 

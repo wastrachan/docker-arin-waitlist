@@ -1,37 +1,42 @@
-version: 2.1
-
+version: 2
 jobs:
   build:
     environment:
-      IMAGE_NAME: wastrachan/arin-waitlist
-      IMAGE_VERSION: "1.1"
+      TAG: "1.1"
+
     docker:
       - image: cimg/base:current
     resource_class: large
     steps:
       - checkout
+
       - setup_remote_docker:
           docker_layer_caching: true
+
       - run:
           name: Build image
           command: |
-            docker build -t $IMAGE_NAME .
-            docker tag $IMAGE_NAME $IMAGE_NAME:latest
-            docker tag $IMAGE_NAME $IMAGE_NAME:$IMAGE_VERSION
+            make build
+            docker tag wastrachan/arin-waitlist:latest wastrachan/arin-waitlist:$TAG
+            docker tag wastrachan/arin-waitlist:latest ghcr.io/wastrachan/arin-waitlist:latest
+            docker tag wastrachan/arin-waitlist:latest ghcr.io/wastrachan/arin-waitlist:$TAG
+
       - run:
           name: Publish image
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-              docker push $IMAGE_NAME:latest
-              docker push $IMAGE_NAME:$IMAGE_VERSION
-            fi
+            echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+            echo "$GITHUB_PAT" | docker login ghcr.io -u $GITHUB_USERNAME --password-stdin
+            docker push wastrachan/arin-waitlist:latest
+            docker push wastrachan/arin-waitlist:$TAG
+            docker push ghcr.io/wastrachan/arin-waitlist:latest
+            docker push ghcr.io/wastrachan/arin-waitlist:$TAG
 
 workflows:
   version: 2
   commit:
     jobs:
       - build:
+          context: Docker
           filters:
             branches:
               only: master
