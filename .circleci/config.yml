@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     environment:
-      IMAGE_VERSION: "1.2"
+      TAG: "1.2"
     docker:
       - image: cimg/base:current
     resource_class: large
