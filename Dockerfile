@@ -1,6 +1,6 @@
-FROM python:3.12-alpine
-
+FROM python:3.13-alpine
 LABEL org.opencontainers.image.title="ARIN Waitlist"
+LABEL org.opencontainers.image.version="v1.2"
 LABEL org.opencontainers.image.description="ARIN Waitlist Monitor"
 LABEL org.opencontainers.image.source="https://github.com/wastrachan/docker-arin-waitlist"
 LABEL org.opencontainers.image.authors="Winston Astrachan"

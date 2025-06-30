@@ -1,11 +1,9 @@
-# ARIN Waitlist Docker Image
-
 .PHONY: help
 help:
 	@echo ""
 	@echo "Usage: make COMMAND"
 	@echo ""
-	@echo "Docker ARIN waitlist image makefile"
+	@echo "Docker arin-waitlist image makefile"
 	@echo ""
 	@echo "Commands:"
 	@echo "  build        Build and tag image"
@@ -29,12 +27,14 @@ push:
 
 .PHONY: run
 run: build
-	@docker run --name arin-waitlist \
-               --rm \
-               -e ARIN_WAITLIST_TIME="Tue, 25 Feb 2020 13:07:29" \
-               -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/TTtttttTT" \
-               -d \
-               ${REGISTRY}/${IMAGE}:${TAG}
+	docker run --name arin-waitlist \
+			   --rm \
+			   -e UPDATE_SCHEDULE="*/5 * * * *" \
+			   -e SLACK_EMOJI=":timhortons:" \
+			   -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/123" \
+			   -e SLACK_TITLE="ARIN Waitlist" \
+			   -e ARIN_WAITLIST_TIME="2024-02-02T19:58:22.198+00:00" \
+	           ${REGISTRY}/${IMAGE}:${TAG}
 
 .PHONY: stop
 stop:
